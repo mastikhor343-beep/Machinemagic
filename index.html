@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secret Number Decipher</title>
+    <style>
+        body {
+            background-color: #050505;
+            color: #00ff41;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center;     /* Center vertically */
+            overflow: hidden;
+            background-image: radial-gradient(circle, #111 10%, #050505 90%);
+        }
+
+        /* Machine Styling */
+        .main-gadget {
+            text-align: center;
+            border: 10px solid #222;
+            padding: 50px;
+            background: #111;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0, 255, 65, 0.1), inset 0 0 20px #000;
+            position: relative;
+        }
+
+        .main-gadget h2 {
+            margin-top: 0;
+            letter-spacing: 5px;
+            color: #444;
+            font-size: 14px;
+        }
+
+        .display-screen {
+            display: flex;
+            gap: 15px;
+            background: #000;
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid #333;
+        }
+
+        .slot {
+            width: 60px;
+            height: 90px;
+            background: linear-gradient(to bottom, #111, #000, #111);
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+            font-size: 60px;
+            line-height: 90px;
+            font-weight: bold;
+            text-align: center;
+            color: #00ff41;
+            text-shadow: 0 0 15px #00ff41;
+        }
+
+        /* Input area hidden in the corner */
+        .secret-control {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: #111;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #222;
+            opacity: 0.3; /* Thoda transparent taaki nazar na aaye */
+            transition: opacity 0.3s;
+        }
+
+        .secret-control:hover {
+            opacity: 1; /* Mouse le jaane par dikhega */
+        }
+
+        input {
+            background: #000;
+            border: 1px solid #444;
+            color: #00ff41;
+            padding: 8px;
+            width: 120px;
+            outline: none;
+            font-family: monospace;
+        }
+
+        button {
+            background: #222;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #00ff41;
+            color: #000;
+        }
+
+        #status-light {
+            width: 12px;
+            height: 12px;
+            background: #ff0000;
+            border-radius: 50%;
+            margin: 15px auto;
+            box-shadow: 0 0 10px #ff0000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-gadget">
+        <h2>QUANTUM DECIPHER UNIT</h2>
+        <div id="status-light"></div>
+        <div class="display-screen">
+            <div class="slot">?</div>
+            <div class="slot">?</div>
+            <div class="slot">?</div>
+            <div class="slot">?</div>
+            <div class="slot">?</div>
+            <div class="slot">?</div>
+            <div class="slot">?</div>
+            <div class="slot">?</div>
+        </div>
+    </div>
+
+    <div class="secret-control">
+        <input type="password" id="secretCode" maxlength="8" placeholder="Enter 8 Digits">
+        <button onclick="runSequence()">INITIATE</button>
+    </div>
+
+    <script>
+        function runSequence() {
+            const code = document.getElementById('secretCode').value;
+            const slots = document.querySelectorAll('.slot');
+            const light = document.getElementById('status-light');
+
+            if (code.length !== 8) {
+                alert("8 digits please!");
+                return;
+            }
+
+            // Status light yellow while processing
+            light.style.background = "#ffae00";
+            light.style.boxShadow = "0 0 10px #ffae00";
+
+            slots.forEach((slot, index) => {
+                let cycles = 0;
+                let maxCycles = 30 + (index * 10); // Har digit thoda ruk ke rukega
+
+                const timer = setInterval(() => {
+                    slot.innerText = Math.floor(Math.random() * 10);
+                    cycles++;
+
+                    if (cycles > maxCycles) {
+                        clearInterval(timer);
+                        slot.innerText = code[index];
+                        
+                        // Last digit aane par light green
+                        if (index === 7) {
+                            light.style.background = "#00ff41";
+                            light.style.boxShadow = "0 0 10px #00ff41";
+                        }
+                    }
+                }, 40);
+            });
+        }
+    </script>
+</body>
+</html>
