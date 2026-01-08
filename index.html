@@ -3,75 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secret 5-Digit Red Decoder</title>
+    <title>Neon Red Machine</title>
     <style>
         body {
-            background-color: #0d0000; /* Darker Red background */
-            color: #ff3333; /* Bright Red text */
-            font-family: 'Consolas', monospace; /* Techy font */
+            background-color: #0d0000;
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
             overflow: hidden;
-            background-image: radial-gradient(circle, #300000 0%, #0d0000 80%); /* Gradient effect */
+            font-family: 'Courier New', Courier, monospace;
         }
 
-        /* Main Machine Container */
-        .machine-container {
+        /* Machine box jo center mein rahega */
+        .machine-wrapper {
+            background: #1a0000;
+            border: 4px solid #ff0000;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.4);
             text-align: center;
-            background: #1a0000; /* Dark red background for machine */
-            border: 3px solid #660000; /* Darker red border */
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 0 30px rgba(255, 51, 51, 0.3); /* Red glowing shadow */
-            position: relative;
+            z-index: 10;
         }
 
         h1 {
-            color: #ff3333;
-            text-shadow: 0 0 15px #ff3333;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+            margin-bottom: 30px;
             letter-spacing: 5px;
-            font-size: 2em;
-            margin-bottom: 25px;
         }
 
-        /* Display Slots */
-        .display-slots {
+        .display-container {
             display: flex;
-            gap: 12px;
-            background: #000; /* Black background for slots */
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #ff3333; /* Red border for slot display */
-            box-shadow: inset 0 0 10px rgba(255, 51, 51, 0.5);
+            gap: 15px;
+            background: #000;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #660000;
         }
 
         .slot {
             width: 60px;
             height: 90px;
-            background: #050000; /* Very dark background for individual slots */
-            border: 1px solid #660000;
-            border-radius: 4px;
-            font-size: 55px;
+            background: #050000;
+            border: 1px solid #ff0000;
+            border-radius: 5px;
+            font-size: 60px;
             line-height: 90px;
             font-weight: bold;
-            text-align: center;
-            color: #ff3333;
-            text-shadow: 0 0 25px #ff3333; /* Intense red glow */
+            color: #ff0000;
+            text-shadow: 0 0 15px #ff0000;
         }
 
-        /* Hidden Control Panel (Bottom Right) */
-        .control-panel {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            background: #1a0000;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #660000;
-            opacity: 0.08; /* Almost invisible */
-            transition: opacity 0.3s ease-in-out;
-            box-shadow: 0 0 10px rgba(255, 51, 51, 0.1);
+        /* Chupa hua input box corner mein */
+        .secret-area {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            opacity: 0.05;
+            transition: 0.3s;
         }
+
+        .secret-area:hover {
+            opacity: 1;
+        }
+
+        input {
+            background: #000;
+            border: 1px solid #ff0000;
+            color: #ff0000;
+            padding: 10px;
+            width: 100px;
+            outline: none;
+        }
+
+        button {
+            background: #ff0000;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="machine-wrapper">
+        <h1>NEON DECODER</h1>
+        <div class="display-container">
+            <div class="slot">0</div>
+            <div class="slot">0</div>
+            <div class="slot">0</div>
+            <div class="slot">0</div>
+            <div class="slot">0</div>
+        </div>
+    </div>
+
+    <div class="secret-area">
+        <input type="password" id="myCode" maxlength="5" placeholder="5 Digits">
+        <button onclick="startHack()">START</button>
+    </div>
+
+    <script>
+        const s_spin = new Audio('spin.mp3');
+        const s_win = new Audio('success.mp3');
+
+        function startHack() {
+            const val = document.getElementById('myCode').value;
+            const slots = document.querySelectorAll('.slot');
+
+            if(val.length !== 5) {
+                alert("Bhai 5 number dalo!");
+                return;
+            }
+
+            // Sound play karne ke liye permission
+            s_spin.loop = true;
+            s_spin.play().catch(e => console.log("Click page first"));
+
+            slots.forEach((slot, i) => {
+                let count = 0;
+                let limit = 20 + (i * 10);
+
+                let timer = setInterval(() => {
+                    slot.innerText = Math.floor(Math.random() * 10);
+                    count++;
+
+                    if(count > limit) {
+                        clearInterval(timer);
+                        slot.innerText = val[i];
+
+                        if(i === 4) {
+                            s_spin.pause();
+                            s_spin.currentTime = 0;
+                            s_win.play();
+                        }
+                    }
+                }, 50);
+            });
+        }
+    </script>
+</body>
+</html>
